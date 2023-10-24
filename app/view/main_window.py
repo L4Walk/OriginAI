@@ -11,6 +11,8 @@ from .gallery_interface import GalleryInterface
 from .home_interface import HomeInterface
 from .status_info_interface import StatusInfoInterface
 from .setting_interface import SettingInterface
+from .chat_interface import ChatInterface
+
 from ..common.config import SUPPORT_URL, cfg
 from ..common.icon import Icon
 from ..common.signal_bus import signalBus
@@ -26,6 +28,9 @@ class MainWindow(FluentWindow):
 
         # create sub interface
         self.homeInterface = HomeInterface(self)
+        self.chatInterface = ChatInterface(self)
+
+
         self.statusInfoInterface = StatusInfoInterface(self)
         self.settingInterface = SettingInterface(self)
         # enable acrylic effect
@@ -50,7 +55,7 @@ class MainWindow(FluentWindow):
         self.navigationInterface.addSeparator()
 
         pos = NavigationItemPosition.SCROLL
-
+        self.addSubInterface(self.chatInterface, FIF.MESSAGE, "ChatGPT", pos)
         # add custom widget to bottom
         self.navigationInterface.addWidget(
             routeKey='avatar',
