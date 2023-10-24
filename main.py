@@ -1,16 +1,37 @@
-# 这是一个示例 Python 脚本。
+# coding:utf-8
 
-# 按 Shift+F10 执行或将其替换为您的代码。
-# 按 双击 Shift 在所有地方搜索类、文件、工具窗口、操作和设置。
+import os
+import sys
+
+from PyQt6.QtCore import Qt, QTranslator
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QApplication
+from qfluentwidgets import FluentTranslator
+
+from app.common.config import cfg
+from app.view.main_window import MainWindow
 
 
-def print_hi(name):
-    # 在下面的代码行中使用断点来调试脚本。
-    print(f'Hi, {name}')  # 按 Ctrl+F8 切换断点。
+# enable dpi scale
+if cfg.get(cfg.dpiScale) != "Auto":
+    os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "0"
+    os.environ["QT_SCALE_FACTOR"] = str(cfg.get(cfg.dpiScale))
 
+# create application
+app = QApplication(sys.argv)
+app.setAttribute(Qt.ApplicationAttribute.AA_DontCreateNativeWidgetSiblings)
 
-# 按间距中的绿色按钮以运行脚本。
-if __name__ == '__main__':
-    print_hi('PyCharm')
+# internationalization
+locale = cfg.get(cfg.language).value
+translator = FluentTranslator(locale)
+galleryTranslator = QTranslator()
+galleryTranslator.load(locale, "gallery", ".", ":/gallery/i18n")
 
-# 访问 https://www.jetbrains.com/help/pycharm/ 获取 PyCharm 帮助
+app.installTranslator(translator)
+app.installTranslator(galleryTranslator)
+
+# create main window
+w = MainWindow()
+w.show()
+
+app.exec()
